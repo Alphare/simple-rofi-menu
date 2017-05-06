@@ -7,6 +7,7 @@ import sys
 import subprocess
 from collections import OrderedDict
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CONFIG_FILE_NAME = 'pm_config'
 
 def create_menu_from_config(config):
@@ -25,11 +26,11 @@ def load_config():
     Else, we try opening the json file.
     """
     try:
-        with open("{}.yaml".format(CONFIG_FILE_NAME), encoding='utf-8', mode='r') as f:
+        with open(os.path.join(BASE_DIR, "{}.yaml").format(CONFIG_FILE_NAME), encoding='utf-8', mode='r') as f:
             import yaml
             config = yaml.load(f)
     except FileNotFoundError:
-        with open("{}.json".format(CONFIG_FILE_NAME), encoding='utf-8', mode='r') as f:
+        with open(os.path.join(BASE_DIR, "{}.json").format(CONFIG_FILE_NAME), encoding='utf-8', mode='r') as f:
             import json
             config = json.load(f)
 
