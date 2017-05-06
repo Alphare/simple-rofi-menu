@@ -1,0 +1,19 @@
+---
+separator: wew
+index_start: 3
+index_format: "{item_index}: {item_name}"
+numbered: True
+groups:
+- items:
+  - name: Lock Screen
+    command: "/home/alphare/.config/i3/block_lock.sh"
+  - name: Logout
+    command: i3-msg exit
+- items:
+  - name: Switch user
+    command: gdmflexiserver
+  - name: Reboot
+    command: reboot
+  - name: Shutdown
+    command: init 0
+
