@@ -1,11 +1,39 @@
 #!/usr/bin/python3
 """
-Simple power menu for rofi.
+A simple power menu for rofi.
 """
+import os.path
 import sys
 import subprocess
 from collections import OrderedDict
 
+CONFIG_FILE_NAME = 'pm_config'
+
+def create_menu_from_config(config):
+    groups = []
+    for group in config['groups']:
+        items = []
+        for item in group['items']:
+            items.append(MenuItem(**item))
+        groups.append(MenuGroup(*items))
+    del config['groups']
+    return MenuChoices(*groups, **config)
+
+def load_config():
+    """
+    Tries to open the yaml file first. If found, we assume PyYAML is installed and continue.
+    Else, we try opening the json file.
+    """
+    try:
+        with open("{}.yaml".format(CONFIG_FILE_NAME), encoding='utf-8', mode='r') as f:
+            import yaml
+            config = yaml.load(f)
+    except FileNotFoundError:
+        with open("{}.json".format(CONFIG_FILE_NAME), encoding='utf-8', mode='r') as f:
+            import json
+            config = json.load(f)
+
+    return create_menu_from_config(config)
 
 class MenuItem:
     def __init__(self, name, command):
@@ -20,7 +48,6 @@ class MenuItem:
 class MenuGroup:
     def __init__(self, *items, **kwargs):
         super().__init__()
-        self.visible = kwargs.get('visible', True)
         self.menu_items = OrderedDict()
         for item in items:
             self.add_item(item)
@@ -34,15 +61,16 @@ class MenuGroup:
 
 
 class MenuChoices:
-    groups = []
-    separator = '----'
-
     @property
     def number_of_items(self):
         return sum([len(menu_items) for menu_items in [group.menu_items for group in self.groups]])
 
     def __init__(self, *groups, **kwargs):
         super().__init__()
+        self.index_start = kwargs.get('index_start', 0)
+        self.index_format = kwargs.get('index_format', "{item_index} {item_name}")
+        self.separator = kwargs.get('separator', '---')
+        self.groups = []
         self.numbered = kwargs.get('numbered', False)
         for group in groups:
             self.add_group(group)
@@ -62,13 +90,16 @@ class MenuChoices:
     def add_group(self, group):
         assert isinstance(group, MenuGroup)
         if self.numbered:
+            # Change the key to all MenuItems in the group using `self.index_format` which must define {item_index} and {item_name}
+            # starts at `self.index_start`
             new_items = OrderedDict()
-            for index, (name, command) in enumerate(group.menu_items.items()):
-                new_items["{} {}".format(self.number_of_items + index, name)] = command
+            for index, (name, command) in enumerate(group.menu_items.items(), start=self.index_start):
+                new_items[self.index_format.format(item_index=self.number_of_items + index, item_name=name)] = command
             group.menu_items = new_items
         self.groups.append(group)
 
     def __getitem__(self, name):
+        # Look for the MenuItem with this name in each group
         for group in self.groups:
             attr = group.menu_items.get(name)
             if attr:
@@ -77,18 +108,9 @@ class MenuChoices:
 
 
 def power_menu():
-    menu_choices = MenuChoices(
-        MenuGroup(
-            MenuItem('Lock screen', "/home/raphael/.config/i3/block_lock.sh"),
-            MenuItem('Logout', "i3-msg exit"),
-        ),
-        MenuGroup(
-            MenuItem('Switch user', "gdmflexiserver"),
-            MenuItem('Reboot', "reboot"),
-            MenuItem('Shutdown', "init 0"),
-        ),
-        numbered=True,
-    )
+    menu_choices = load_config()
+    assert isinstance(menu_choices, MenuChoices)
+
     try:
         # Commands might be multiple words long
         arguments = sys.argv[1:]
