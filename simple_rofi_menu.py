@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-A simple power menu for rofi.
+A simple menu for rofi.
 """
 import os.path
 import sys
@@ -8,9 +8,10 @@ import subprocess
 from collections import OrderedDict
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-CONFIG_FILE_NAME = 'pm_config'
+CONFIG_FILE_NAME = 'srm_config'
 
-def create_menu_from_config(config):
+
+def import_menu_from_config(config):
     groups = []
     for group in config['groups']:
         items = []
@@ -18,9 +19,10 @@ def create_menu_from_config(config):
             items.append(MenuItem(**item))
         groups.append(MenuGroup(*items))
     del config['groups']
-    return MenuChoices(*groups, **config)
+    return Menu(*groups, **config)
 
-def load_config():
+
+def create_menu():
     """
     Tries to open the yaml file first. If found, we assume PyYAML is installed and continue.
     Else, we try opening the json file.
@@ -34,7 +36,8 @@ def load_config():
             import json
             config = json.load(f)
 
-    return create_menu_from_config(config)
+    return import_menu_from_config(config)
+
 
 class MenuItem:
     def __init__(self, name, command):
@@ -61,7 +64,7 @@ class MenuGroup:
         return "\n".join(self.menu_items)
 
 
-class MenuChoices:
+class Menu:
     @property
     def number_of_items(self):
         return sum([len(menu_items) for menu_items in [group.menu_items for group in self.groups]])
@@ -108,24 +111,24 @@ class MenuChoices:
         raise KeyError(name)
 
 
-def power_menu():
-    menu_choices = load_config()
-    assert isinstance(menu_choices, MenuChoices)
+def main():
+    menu = create_menu()
+    assert isinstance(menu, Menu)
 
     try:
         # Commands might be multiple words long
         arguments = sys.argv[1:]
         choice = " ".join(arguments)
-        split_bash_command = menu_choices[choice].split()
+        split_bash_command = menu[choice].split()
 
         # Popen ensures the child process still live even if rofi exits
         subprocess.Popen(split_bash_command, stdout=subprocess.PIPE)
 
     except (KeyError, IndexError):
         # Fine for this program's purposes
-        # Will trigger if no arguments are provided or if they are not in `menu_choices`
-        print(menu_choices)
+        # Will trigger if no arguments are provided or if they are not in `menu`
+        print(menu)
 
 
 if __name__ == '__main__':
-    power_menu()
+    main()

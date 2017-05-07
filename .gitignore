@@ -2,5 +2,5 @@
 .idea/
 
 # Ignore my config files
-/pm_config.json
-/pm_config.yaml
+/srm_config.json
+/srm_config.yaml
