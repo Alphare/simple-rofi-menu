@@ -50,7 +50,7 @@ class MenuItem:
 
 
 class MenuGroup:
-    def __init__(self, *items, **kwargs):
+    def __init__(self, *items):
         super().__init__()
         self.menu_items = OrderedDict()
         for item in items:
@@ -71,11 +71,11 @@ class Menu:
 
     def __init__(self, *groups, **kwargs):
         super().__init__()
+        self.numbered = kwargs.get('numbered', False)
         self.index_start = kwargs.get('index_start', 0)
         self.index_format = kwargs.get('index_format', "{item_index} {item_name}")
         self.separator = kwargs.get('separator', '---')
         self.groups = []
-        self.numbered = kwargs.get('numbered', False)
         for group in groups:
             self.add_group(group)
 
