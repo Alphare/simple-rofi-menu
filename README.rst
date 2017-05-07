@@ -13,55 +13,68 @@ To use the menu with rofi, use::
 
     rofi -show <name> -modi <name>:<path>/simple_rofi_menu.py.
 
-The script will then fetch your `srm_config.<extension>` file, in the same folder as `simple_rofi_menu.py`. You can find examples in the `example_configs/` folder.
+The script will then fetch your :code:`srm_config.<extension>` file, in the same folder as :code:`simple_rofi_menu.py`. You can find examples in the :code:`example_configs/` folder.
 
 As of now, SRM supports YAML and JSON formats. SRM will look for the YAML one first, then the JSON one. If you intend on using a YAML configuration file, you will need to have PyYAML_ installed.
 
-Note: since this script uses `/usr/bin/python3`, you can do so using `pip3 install PyYAML --user` to use your general Python environment, or just change the shebang line to whatever virtualenv you want to use, as long as it's based on Python 3.
+Note: since this script uses :code:`/usr/bin/python3`, you can do so using :code:`pip3 install PyYAML --user` to use your general Python environment, or just change the shebang line to whatever virtualenv you want to use, as long as it's based on Python 3.
 
 Documentation
 =============
+
 Menu
 ----
-    **\*groups**
-        | Type: MenuGroup_
-        | As many as you want, as positional arguments.
 
-    [keyword argument] **numbered**
-        | Type: Boolean
-        | Default: `False`
-        | Auto-numbering of all menu items.
+| **Positional arguments**: :code:`*groups`
+| **Type:** MenuGroup_
+| As many groups as you want.
 
-    [keyword argument] **index_start**
-        | Type: Integer
-        | Default: `0`
-        | Index of the first menu item if `numbered` is `True`.
+----------
 
-    [keyword argument] **index_format**
-        | Type: String
-        | Default: `"{item_index} {item_name}"`
-        | Format for updating each `MenuItem` if `numbered` is `True`, which must define `{item_index}` and `{item_name}`.
+| **Keyword argument:** :code:`numbered`
+| **Type**: Boolean
+| **Default**: :code:`False`
+| Auto-numbering of all menu items.
 
-    [keyword argument] **separator**
-        | Type: String
-        | Default: `"---"`
-        | Separates menu groups.
+----------
+
+| **Keyword argument:** :code:`index_start`
+| **Type**: Integer
+| **Default**: :code:`0`
+| Index of the first menu item if :code:`numbered` is :code:`True`.
+
+----------
+
+| **Keyword argument:** :code:`index_format`
+| **Type**: String
+| **Default**: :code:`"{item_index} {item_name}"`
+| Format for updating each :code:`MenuItem` if :code:`numbered` is :code:`True`, which must define :code:`{item_index}` and :code:`{item_name}`.
+
+----------
+
+| **Keyword argument:** :code:`separator`
+| **Type**: String
+| **Default**: :code:`"---"`
+| Separates menu groups.
+
 
 MenuGroup
 ---------
-    **\*items**
-        | Type: MenuItem_
-        | As many as you want, as positional arguments.
+| **Positional arguments**: :code:`*items`
+| **Type**: MenuItem_
+| As many items as you want.
 
 MenuItem
 --------
-    **name**
-        | Type: String
-        | Name to be displayed in the menu.
+| **Argument**: :code:`name`
+| **Type**: String
+| Name to be displayed in the menu.
 
-    **command**
-        | Type: String
-        | Command to be executed upon selecting this item
+----------
+
+| **Argument**: :code:`command`
+| **Type**: String
+| Command to be executed upon selecting this item
 
 
 .. _Rofi: https://davedavenport.github.io/rofi/
