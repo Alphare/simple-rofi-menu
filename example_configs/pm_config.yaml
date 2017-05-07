@@ -6,7 +6,7 @@ numbered: True
 groups:
 - items:
   - name: Lock Screen
-    command: "/home/alphare/.config/i3/block_lock.sh"
+    command: i3lock
   - name: Logout
     command: i3-msg exit
 - items:
@@ -16,4 +16,3 @@ groups:
     command: reboot
   - name: Shutdown
     command: init 0
-

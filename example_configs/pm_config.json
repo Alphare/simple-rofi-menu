@@ -1,6 +1,6 @@
 {
-    "separator": "wew",
-    "index_start": 3,
+    "separator": "---",
+    "index_start": 1,
     "index_format": "{item_index}: {item_name}",
     "numbered": true,
     "groups": [
@@ -8,7 +8,7 @@
             "items": [
                 {
                     "name": "Lock Screen",
-                    "command": "/home/alphare/.config/i3/block_lock.sh"
+                    "command": "i3lock"
                 },
                 {
                     "name": "Logout",
