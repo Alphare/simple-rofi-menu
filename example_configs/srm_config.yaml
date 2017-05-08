@@ -1,11 +1,11 @@
 ---
-separator: "---"
+separator: "----"
 index_start: 1
 index_format: "{item_index}: {item_name}"
 numbered: True
 groups:
 - items:
-  - name: Lock Screen
+  - name: Lock screen
     command: i3lock
   - name: Logout
     command: i3-msg exit

@@ -48,6 +48,9 @@ class MenuItem:
     def __str__(self):
         return self.name
 
+    def __eq__(self, other):
+        return self.name == other.name and self.command == other.command
+
 
 class MenuGroup:
     def __init__(self, *items):
@@ -62,6 +65,11 @@ class MenuGroup:
 
     def __str__(self):
         return "\n".join(self.menu_items)
+
+    def __eq__(self, other):
+        if len(self.menu_items) != len(other.menu_items):
+            return False
+        return all([item == other_item for item, other_item in zip(self.menu_items, other.menu_items)])
 
 
 class Menu:
@@ -110,24 +118,47 @@ class Menu:
                 return attr
         raise KeyError(name)
 
+    def __eq__(self, other):
+        if not self.groups and not other.groups:
+            groups_are_equal = True
+        elif len(self.groups) != len(other.groups):
+            return False
+        else:
+            groups_are_equal = all([group == other_group for group, other_group in zip(self.groups, other.groups)])
+        return all([
+            groups_are_equal,
+            self.index_format == other.index_format,
+            self.index_start == other.index_start,
+            self.numbered == other.numbered,
+            self.separator == other.separator,
+        ])
+
+
+def run_selected_item(menu, sys_argv, dry_run=False):
+    # Commands might be multiple words long
+    arguments = sys_argv[1:]
+    choice = " ".join(arguments)
+    split_bash_command = menu[choice].split()
+    # Popen ensures the child process still live even if rofi exits
+    if not dry_run:
+        subprocess.Popen(split_bash_command, stdout=subprocess.PIPE)
+
+
+def run_menu(menu):
+    try:
+        # sys.argv passed to the function for easier testing
+        run_selected_item(menu, sys.argv)
+    except KeyError:
+        # Fine for this program's purposes
+        # Will trigger if no arguments are provided or if they are not in `menu`
+        print(menu)
+
 
 def main():
     menu = create_menu()
     assert isinstance(menu, Menu)
 
-    try:
-        # Commands might be multiple words long
-        arguments = sys.argv[1:]
-        choice = " ".join(arguments)
-        split_bash_command = menu[choice].split()
-
-        # Popen ensures the child process still live even if rofi exits
-        subprocess.Popen(split_bash_command, stdout=subprocess.PIPE)
-
-    except (KeyError, IndexError):
-        # Fine for this program's purposes
-        # Will trigger if no arguments are provided or if they are not in `menu`
-        print(menu)
+    run_menu(menu)
 
 
 if __name__ == '__main__':
