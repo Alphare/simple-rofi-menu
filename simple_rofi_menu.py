@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-A simple menu for rofi.
+A simple menu for Rofi.
 """
 import os.path
 import sys
@@ -27,8 +27,8 @@ def import_menu_from_config(config):
 
 def create_menu():
     """
-    Tries to open the yaml file first. If found, we assume PyYAML is installed and continue.
-    Else, we try opening the json file.
+    Tries to open the YAML file first. If found, we assume PyYAML is installed and continue.
+    Else, we try opening the JSON file.
     """
     try:
         with open("{}.yaml".format(os.path.join(CONFIG_FILE_DIR, CONFIG_FILE_NAME)), encoding='utf-8', mode='r') as f:
@@ -141,7 +141,7 @@ def run_selected_item(menu, sys_argv, dry_run=False):
     arguments = sys_argv[1:]
     choice = " ".join(arguments)
     split_bash_command = menu[choice].split()
-    # Popen ensures the child process still live even if rofi exits
+    # Popen ensures the child process still live even if Rofi exits
     if not dry_run:
         subprocess.Popen(split_bash_command, stdout=subprocess.PIPE)
 
