@@ -7,19 +7,16 @@ Screenshot
 ==========
 .. image:: screenshot.png
 
-Install
-=======
-Simply download :code:`simple_rofi_menu.py` and an example config file to the same directory. Soon, you will be able to use a custom path for your config file.
+Install and usage
+=================
+Simply download :code:`simple_rofi_menu.py` and an example config file to the same directory. You can find examples in the :code:`example_configs/` folder.
 
-Usage
-=====
+If you want to use a different path for your config file, add an environment variable ':code:`SRM_CONFIG_DIR`' and set it to the path of the **directory** containing your :code:`srm_config.<extension>` file.
+As of now, SRM supports YAML and JSON formats. SRM will look for the YAML one first, then the JSON one. If you intend on using a YAML configuration file, you will need to have PyYAML_ installed.
+
 To use the menu with rofi, use::
 
     rofi -show <name> -modi <name>:<path>/simple_rofi_menu.py.
-
-The script will then fetch your :code:`srm_config.<extension>` file, in the same folder as :code:`simple_rofi_menu.py`. You can find examples in the :code:`example_configs/` folder.
-
-As of now, SRM supports YAML and JSON formats. SRM will look for the YAML one first, then the JSON one. If you intend on using a YAML configuration file, you will need to have PyYAML_ installed.
 
 Note: This script uses :code:`#!/usr/bin/env python3`, it will fetch your current Python environment and look for Python 3. You can do :code:`pip3 install PyYAML --user` to install PyYAML in your general Python environment.
 
