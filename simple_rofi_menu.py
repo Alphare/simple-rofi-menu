@@ -7,8 +7,11 @@ import sys
 import subprocess
 from collections import OrderedDict
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CONFIG_FILE_NAME = 'srm_config'
+CONFIG_FILE_DIR = os.environ.get(
+    'SRM_CONFIG_DIR',
+    os.path.dirname(os.path.abspath(__file__))
+)
 
 
 def import_menu_from_config(config):
@@ -28,14 +31,13 @@ def create_menu():
     Else, we try opening the json file.
     """
     try:
-        with open(os.path.join(BASE_DIR, "{}.yaml").format(CONFIG_FILE_NAME), encoding='utf-8', mode='r') as f:
+        with open("{}.yaml".format(os.path.join(CONFIG_FILE_DIR, CONFIG_FILE_NAME)), encoding='utf-8', mode='r') as f:
             import yaml
             config = yaml.load(f)
     except FileNotFoundError:
-        with open(os.path.join(BASE_DIR, "{}.json").format(CONFIG_FILE_NAME), encoding='utf-8', mode='r') as f:
+        with open("{}.json".format(os.path.join(CONFIG_FILE_DIR, CONFIG_FILE_NAME)), encoding='utf-8', mode='r') as f:
             import json
             config = json.load(f)
-
     return import_menu_from_config(config)
 
 
