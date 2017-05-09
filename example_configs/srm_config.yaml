@@ -1,4 +1,3 @@
----
 separator: "----"
 index_start: 1
 index_format: "{item_index}: {item_name}"
